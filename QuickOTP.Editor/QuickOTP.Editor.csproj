@@ -27,5 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../QuickOTP.Core/QuickOTP.Core.csproj" />
+    <TrimmerRootAssembly Include="Avalonia.Dialogs" />
   </ItemGroup>
 </Project>

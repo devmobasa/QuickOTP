@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Dialogs;
 using Avalonia.Fonts.Inter;
 
 namespace QuickOTP.Editor;
@@ -17,9 +18,16 @@ internal static class Program
 
     private static AppBuilder ConfigureBuilder( AppBuilder builder )
     {
-        return builder
+        builder = builder
             .UsePlatformDetect( )
             .WithInterFont( )
             .LogToTrace( );
+
+        if ( OperatingSystem.IsLinux( ) )
+        {
+            builder = builder.UseManagedSystemDialogs( );
+        }
+
+        return builder;
     }
 }
