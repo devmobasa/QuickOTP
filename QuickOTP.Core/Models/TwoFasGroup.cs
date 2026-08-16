@@ -1,0 +1,7 @@
+namespace QuickOTP.Core.Models;
+
+public class TwoFasGroup
+{
+    public string? Id { get; set; }
+    public string? Name { get; set; }
+}

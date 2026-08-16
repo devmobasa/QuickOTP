@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Test
+        run: dotnet test QuickOTP.Tests/QuickOTP.Tests.csproj -c Release --nologo
+
+  publish-linux-aot:
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install Native AOT prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang zlib1g-dev
+      - name: Publish Native AOT linux-x64
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          for app in Popup Editor Console; do
+            dest="publish/linux-x64/QuickOTP.${app}"
+            dotnet publish "QuickOTP.${app}/QuickOTP.${app}.csproj" \
+              -c Release \
+              -r linux-x64 \
+              --self-contained true \
+              -o "$dest"
+            tar -C publish/linux-x64 \
+              --exclude='*.dbg' \
+              --exclude='*.pdb' \
+              -czf "artifacts/QuickOTP.${app}-linux-x64.tar.gz" "QuickOTP.${app}"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64-aot
+          path: artifacts/*.tar.gz
+          if-no-files-found: error
+
+  publish-windows-aot:
+    needs: test
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Publish Native AOT win-x64
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          foreach ($app in @('Popup', 'Editor')) {
+            $dest = "publish/win-x64/QuickOTP.$app"
+            dotnet publish "QuickOTP.$app/QuickOTP.$app.csproj" `
+              -c Release `
+              -r win-x64 `
+              --self-contained true `
+              -o $dest
+            if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+            }
+            Get-ChildItem $dest -Include *.pdb -Recurse | Remove-Item -Force
+            Compress-Archive `
+              -Path $dest `
+              -DestinationPath "artifacts/QuickOTP.$app-win-x64.zip" `
+              -Force
+            $verify = "publish/verify/QuickOTP.$app"
+            Expand-Archive `
+              -LiteralPath "artifacts/QuickOTP.$app-win-x64.zip" `
+              -DestinationPath $verify `
+              -Force
+            if (-not (Test-Path "$verify/QuickOTP.$app/QuickOTP.$app.exe" -PathType Leaf)) {
+              throw "Windows archive does not contain QuickOTP.$app.exe at the expected path."
+            }
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win-x64-aot
+          path: artifacts/*.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [publish-linux-aot, publish-windows-aot]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-x64-aot
+          path: artifacts
+      - uses: actions/download-artifact@v4
+        with:
+          name: win-x64-aot
+          path: artifacts
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ github.ref_name }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" artifacts/* --clobber
+          else
+            gh release create "$tag" artifacts/* --title "$tag" --generate-notes
+          fi

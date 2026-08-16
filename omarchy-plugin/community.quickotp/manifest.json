@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "community.quickotp",
+  "name": "QuickOTP",
+  "version": "0.1.0",
+  "author": "devmobasa",
+  "description": "Open the QuickOTP code popup or vault editor from the Omarchy bar",
+  "license": "MIT",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "QuickOTPWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "QuickOTP",
+    "description": "Open the code popup or vault editor",
+    "category": "Plugin",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

@@ -1,0 +1,121 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickOTP.Editor.App"
+             RequestedThemeVariant="Light">
+    <Application.Resources>
+        <FontFamily x:Key="AppFont">Inter, Input Sans, Segoe UI, sans-serif</FontFamily>
+        <FontFamily x:Key="CodeFont">JetBrains Mono, Cascadia Mono, Input Mono, ui-monospace, monospace</FontFamily>
+
+        <Color x:Key="HarborColor">#13202C</Color>
+        <Color x:Key="HarborRaisedColor">#1C2E3C</Color>
+        <Color x:Key="HarborSelectedColor">#243848</Color>
+        <Color x:Key="FogColor">#E8EEF3</Color>
+        <Color x:Key="FoamColor">#F7FBFD</Color>
+        <Color x:Key="BezelColor">#C7923E</Color>
+        <Color x:Key="BezelSoftColor">#E3C17A</Color>
+        <Color x:Key="TideColor">#215F6A</Color>
+        <Color x:Key="TideHoverColor">#2A7380</Color>
+        <Color x:Key="MistColor">#6B7C8A</Color>
+        <Color x:Key="RailMistColor">#8A9AAB</Color>
+        <Color x:Key="LineColor">#D5DEE8</Color>
+        <Color x:Key="InkColor">#13202C</Color>
+        <Color x:Key="DangerColor">#9B3A34</Color>
+        <Color x:Key="UrgentColor">#D4653A</Color>
+
+        <SolidColorBrush x:Key="HarborBrush" Color="{StaticResource HarborColor}" />
+        <SolidColorBrush x:Key="HarborRaisedBrush" Color="{StaticResource HarborRaisedColor}" />
+        <SolidColorBrush x:Key="HarborSelectedBrush" Color="{StaticResource HarborSelectedColor}" />
+        <SolidColorBrush x:Key="FogBrush" Color="{StaticResource FogColor}" />
+        <SolidColorBrush x:Key="FoamBrush" Color="{StaticResource FoamColor}" />
+        <SolidColorBrush x:Key="BezelBrush" Color="{StaticResource BezelColor}" />
+        <SolidColorBrush x:Key="BezelSoftBrush" Color="{StaticResource BezelSoftColor}" />
+        <SolidColorBrush x:Key="TideBrush" Color="{StaticResource TideColor}" />
+        <SolidColorBrush x:Key="TideHoverBrush" Color="{StaticResource TideHoverColor}" />
+        <SolidColorBrush x:Key="MistBrush" Color="{StaticResource MistColor}" />
+        <SolidColorBrush x:Key="RailMistBrush" Color="{StaticResource RailMistColor}" />
+        <SolidColorBrush x:Key="LineBrush" Color="{StaticResource LineColor}" />
+        <SolidColorBrush x:Key="InkBrush" Color="{StaticResource InkColor}" />
+        <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+        <SolidColorBrush x:Key="UrgentBrush" Color="{StaticResource UrgentColor}" />
+        <SolidColorBrush x:Key="RailTextBrush" Color="#E8EEF3" />
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{DynamicResource AppFont}" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="MinHeight" Value="40" />
+        </Style>
+
+        <Style Selector="Button.tide">
+            <Setter Property="Background" Value="{DynamicResource TideBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.tide:pointerover">
+            <Setter Property="Background" Value="{DynamicResource TideHoverBrush}" />
+        </Style>
+        <Style Selector="Button.tide:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+
+        <Style Selector="Button.ghost">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource RailTextBrush}" />
+            <Setter Property="BorderBrush" Value="#3A5162" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+        <Style Selector="Button.ghost:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HarborRaisedBrush}" />
+        </Style>
+
+        <Style Selector="Button.quiet">
+            <Setter Property="Background" Value="{DynamicResource FoamBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="14,9" />
+        </Style>
+        <Style Selector="Button.quiet:pointerover">
+            <Setter Property="Background" Value="#E3ECF2" />
+        </Style>
+
+        <Style Selector="Button.danger">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+            <Setter Property="BorderBrush" Value="#E3C4C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="14,9" />
+        </Style>
+        <Style Selector="Button.danger:pointerover">
+            <Setter Property="Background" Value="#F8E8E6" />
+        </Style>
+
+        <Style Selector="Button.link">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TideBrush}" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </Application.Styles>
+</Application>

@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="QuickOTP.Console/QuickOTP.Console.csproj" />
+  <Project Path="QuickOTP.Core/QuickOTP.Core.csproj" />
+  <Project Path="QuickOTP.Editor/QuickOTP.Editor.csproj" />
+  <Project Path="QuickOTP.Popup/QuickOTP.Popup.csproj" />
+  <Project Path="QuickOTP.Tests/QuickOTP.Tests.csproj" />
+</Solution>

@@ -1,0 +1,13 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickOTP.Popup.App"
+             RequestedThemeVariant="Light">
+    <Application.Resources>
+        <FontFamily x:Key="AppFont">Input Sans</FontFamily>
+        <FontFamily x:Key="CodeFont">Input Mono</FontFamily>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+</Application>

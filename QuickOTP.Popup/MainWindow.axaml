@@ -1,0 +1,138 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuickOTP.Popup"
+        mc:Ignorable="d" d:DesignWidth="1620" d:DesignHeight="1560"
+        x:Class="QuickOTP.Popup.MainWindow"
+        x:DataType="local:MainWindow"
+        Title="2FA Codes"
+        Width="1620"
+        Height="1560"
+        CanResize="False"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="{DynamicResource AppFont}">
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBackground" Color="#F5F1E9" />
+        <SolidColorBrush x:Key="SurfaceBackground" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#2F4B3F" />
+        <SolidColorBrush x:Key="MutedBrush" Color="#6F6A63" />
+        <SolidColorBrush x:Key="DividerBrush" Color="#E1D7C8" />
+        <SolidColorBrush x:Key="SelectedBrush" Color="#E8E0D4" />
+        <SolidColorBrush x:Key="ChipBrush" Color="#EEE6DA" />
+        <SolidColorBrush x:Key="ErrorBrush" Color="#8B3A2F" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DividerBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DividerBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="6" />
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+        <Style Selector="ListBoxItem:selected">
+            <Setter Property="Background" Value="{DynamicResource SelectedBrush}" />
+        </Style>
+    </Window.Styles>
+
+    <Border Background="{DynamicResource WindowBackground}" Padding="20">
+        <StackPanel Spacing="14">
+            <StackPanel>
+                <TextBlock Text="2FA Codes" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="Type to search | Enter to copy | Esc to close"
+                           FontSize="12"
+                           Foreground="{DynamicResource MutedBrush}" />
+            </StackPanel>
+
+            <TextBox x:Name="SearchBox"
+                     Watermark="Search issuer or name"
+                     TextChanged="OnSearchChanged"
+                     KeyDown="OnKeyDown" />
+
+            <Grid>
+                <ListBox x:Name="AccountsList"
+                         ItemsSource="{Binding FilteredAccounts}"
+                         SelectionMode="Single"
+                         Tapped="OnItemTapped"
+                         PointerReleased="OnListPointerReleased"
+                         KeyDown="OnKeyDown"
+                         DoubleTapped="OnItemDoubleTapped">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:AccountListItem">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="{Binding DisplayName}"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource AccentBrush}" />
+                                <Border Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="1"
+                                        Background="{DynamicResource ChipBrush}"
+                                        CornerRadius="8"
+                                        Padding="8,4"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding RemainingLabel}"
+                                               FontSize="12"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource MutedBrush}" />
+                                </Border>
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="{Binding Code}"
+                                           FontSize="22"
+                                           FontFamily="{DynamicResource CodeFont}"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource AccentBrush}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <TextBlock x:Name="EmptyState"
+                           Text="No accounts found"
+                           Foreground="{DynamicResource MutedBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           IsVisible="False" />
+
+                <TextBlock x:Name="ErrorState"
+                           Text="Could not open the vault.&#x0a;The local account file could not be decrypted or parsed."
+                           Foreground="{DynamicResource ErrorBrush}"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="420"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           IsVisible="False" />
+            </Grid>
+
+            <Button x:Name="DefaultCopyButton"
+                    Content=""
+                    IsDefault="True"
+                    Focusable="False"
+                    IsTabStop="False"
+                    Width="0"
+                    Height="0"
+                    Opacity="0"
+                    Click="OnDefaultCopyClick" />
+        </StackPanel>
+    </Border>
+</Window>

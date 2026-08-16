@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+OMARCHY_SOURCE="${OMARCHY_PATH:-/usr/share/omarchy}"
+omarchy plugin validate .
+qmllint -I "$OMARCHY_SOURCE/shell" QuickOTPWidget.qml
+
+echo "ok - QuickOTP manifest and QML"
